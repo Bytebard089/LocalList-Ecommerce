@@ -1,34 +1,46 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import './Navbar.css';
 
 function Navbar() {
+  const [showMenu, setShowMenu] = useState(false);
+
   return (
-    <nav className="flex items-center justify-between px-6 py-4 bg-white shadow-md">
-      <div className="text-2xl font-bold text-teal-600">
-        <Link to="/">VyapaarSetu</Link>
+    <nav className="nav">
+      <div className="nav-container">
+        {/* Logo */}
+        <div className="nav-logo">
+          <Link to="/">VyapaarSetu</Link>
+        </div>
+
+        <div className="nav-links">
+          <Link to="/" className="nav-link">Home</Link>
+          <Link to="/products" className="nav-link">Products</Link>
+          <Link to="/about" className="nav-link">About</Link>
+          <Link to="/blog" className="nav-link">Blog</Link>
+        </div>
+
+        <div className="nav-buttons">
+          <Link to="/login" className="btn-login">Login</Link>
+          <Link to="/signup" className="btn-signup">Signup</Link>
+        </div>
+
+        <div className="nav-toggle" onClick={() => setShowMenu(!showMenu)}>
+          ☰
+        </div>
       </div>
-      <div className="flex items-center gap-8">
-        <Link to="/" className="text-gray-700 hover:text-teal-600 transition-colors">Home</Link>
-        <Link to="/products" className="text-gray-700 hover:text-teal-600 transition-colors">Products</Link>
-        <Link to="/about" className="text-gray-700 hover:text-teal-600 transition-colors">About</Link>
-        <Link to="/blog" className="text-gray-700 hover:text-teal-600 transition-colors">Blog</Link>
-      </div>
-      <div className="flex items-center gap-4">
-        <Link
-          to="/login"
-          className="px-5 py-2 backdrop-blur-md border border-teal-600 text-teal-700 rounded-xl shadow-inner hover:bg-teal-50 transition-all"
-        >
-          Login
-        </Link>
-        <Link
-          to="/signup"
-          className="px-5 py-2 bg-gradient-to-r from-teal-500 to-green-400 text-white rounded-xl shadow-md hover:shadow-lg hover:from-teal-600 hover:to-green-500 transition-all"
-        >
-          Signup
-        </Link>
-      </div>
+
+      {showMenu && (
+        <div className="nav-mobile-menu">
+          <Link to="/" className="nav-link" onClick={() => setShowMenu(false)}>Home</Link>
+          <Link to="/products" className="nav-link" onClick={() => setShowMenu(false)}>Products</Link>
+          <Link to="/about" className="nav-link" onClick={() => setShowMenu(false)}>About</Link>
+          <Link to="/blog" className="nav-link" onClick={() => setShowMenu(false)}>Blog</Link>
+          <Link to="/login" className="nav-link" onClick={() => setShowMenu(false)}>Login</Link>
+          <Link to="/signup" className="nav-link" onClick={() => setShowMenu(false)}>Signup</Link>
+        </div>
+      )}
     </nav>
   );
 }
-
 export default Navbar;
