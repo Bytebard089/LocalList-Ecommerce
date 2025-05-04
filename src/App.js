@@ -1,29 +1,32 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
-
-// Importing pages (we will create them next)
-import Home from './pages/Home';
-import Products from './pages/Products';
-import About from './pages/About';
-import Blog from './pages/Blog';
-import Login from './pages/Login';
 import Signup from './pages/Signup';
+import Login from './pages/Login';
+import Home from './pages/Home';
 
 function App() {
+  const location = useLocation();
+  const hideNavbarRoutes = ['/login', '/signup'];
+  const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
+
   return (
-    <Router>
-      <Navbar />
+    <>
+      {!shouldHideNavbar && <Navbar />}
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
+        {/* Add other routes as needed */}
       </Routes>
-    </Router>
+    </>
   );
 }
 
-export default App;
+export default function AppWrapper() {
+  return (
+    <Router>
+      <App />
+    </Router>
+  );
+}
