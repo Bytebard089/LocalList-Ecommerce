@@ -1,48 +1,86 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+import { auth, db } from '../firebase';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    console.log({ email, password });
-    // Firebase login logic will go here
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      const userData = userDoc.data();
+  
+      // ✅ Save to localStorage
+      localStorage.setItem("userRole", userData?.role);
+      localStorage.setItem("userId", user.uid);
+  
+      if (userData?.role === 'seller') {
+        navigate('/dashboard/seller');
+      } else if (userData?.role === 'buyer') {
+        navigate('/dashboard/buyer');
+      } else {
+        alert('No role assigned. Please contact support.');
+      }
+  
+    } catch (error) {
+      console.error('Login error:', error.message);
+      alert('Login failed: ' + error.message);
+    }
   };
+  
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <form onSubmit={handleLogin} className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center text-teal-600 mb-6">Login</h2>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-gray-100">
+      <div className="bg-white shadow-xl rounded-2xl p-10 w-[400px] space-y-6 border border-gray-200">
+        <h2 className="text-2xl font-bold text-center text-gray-800">Login to VyapaarSetu</h2>
 
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full mb-4 px-4 py-2 border rounded"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+        <form onSubmit={handleLogin} className="space-y-4">
+          <div>
+            <label className="block text-sm text-gray-600 mb-1">Email</label>
+            <input
+              type="email"
+              placeholder="isha@email.com"
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-teal-500 outline-none text-sm"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
 
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full mb-4 px-4 py-2 border rounded"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+          <div>
+            <label className="block text-sm text-gray-600 mb-1">Password</label>
+            <input
+              type="password"
+              placeholder="••••••••"
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-teal-500 outline-none text-sm"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
 
-        <button type="submit" className="w-full bg-teal-600 text-white py-2 rounded hover:bg-teal-700">
-          Login
-        </button>
+          <button
+            type="submit"
+            className="w-full py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition"
+          >
+            Login
+          </button>
+        </form>
 
-        <p className="mt-4 text-center text-sm">
-          Don’t have an account? <Link to="/signup" className="text-teal-600 underline">Sign up</Link>
+        <p className="text-center text-sm text-gray-500">
+          Don’t have an account?{' '}
+          <Link to="/signup" className="text-teal-600 hover:underline">
+            Sign up
+          </Link>
         </p>
-      </form>
+      </div>
     </div>
   );
 }

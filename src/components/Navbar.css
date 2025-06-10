@@ -34,7 +34,6 @@
   .nav-link:hover {
     color: teal;
   }
-  
   /* Desktop buttons */
   .nav-buttons {
     display: flex;
@@ -74,22 +73,18 @@
     color: teal;
     cursor: pointer;
   }
-  
-  /* Mobile menu */
+ 
   .nav-mobile-menu {
     display: flex;
     flex-direction: column;
     gap: 16px;
     padding: 16px;
   }
-  
-  /* Responsive behavior */
   @media (max-width: 768px) {
     .nav-links,
     .nav-buttons {
       display: none;
     }
-  
     .nav-toggle {
       display: block;
     }
