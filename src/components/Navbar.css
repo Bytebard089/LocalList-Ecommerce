@@ -123,4 +123,17 @@
     width: 100%;          
     z-index: 1000;         
   }
+  .btn-logout {
+    padding: 8px 16px;
+    border: 1px solid #e11d48;
+    border-radius: 10px;
+    color: #e11d48;
+    background-color: white;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .btn-logout:hover {
+    background-color: #ffe4e6;
+  }
   

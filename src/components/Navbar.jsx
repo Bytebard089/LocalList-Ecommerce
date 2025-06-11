@@ -1,18 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 
 function Navbar() {
   const [showMenu, setShowMenu] = useState(false);
+  const [role, setRole] = useState(null);
   const navigate = useNavigate();
 
-  const role = localStorage.getItem("userRole");
+  useEffect(() => {
+    const storedRole = localStorage.getItem("userRole");
+    setRole(storedRole);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("userRole");
     localStorage.removeItem("userId");
+    setRole(null);
     navigate('/login');
   };
+
+  const dashboardPath = role === 'seller' ? '/dashboard/seller' : '/dashboard/buyer';
 
   return (
     <nav className="nav">
@@ -26,11 +33,8 @@ function Navbar() {
           <Link to="/products" className="nav-link">Products</Link>
           <Link to="/about" className="nav-link">About</Link>
           <Link to="/blog" className="nav-link">Blog</Link>
-          {role === 'buyer' && (
-            <Link to="/dashboard/buyer" className="nav-link">Buyer Dashboard</Link>
-          )}
-          {role === 'seller' && (
-            <Link to="/dashboard/seller" className="nav-link">Seller Dashboard</Link>
+          {role && (
+            <Link to={dashboardPath} className="nav-link">Dashboard</Link>
           )}
         </div>
 
@@ -41,7 +45,7 @@ function Navbar() {
               <Link to="/signup" className="btn-signup">Signup</Link>
             </>
           ) : (
-            <button onClick={handleLogout} className="btn-login">Logout</button>
+            <button onClick={handleLogout} className="btn-logout">Logout</button>
           )}
         </div>
 
@@ -57,14 +61,11 @@ function Navbar() {
           <Link to="/products" className="nav-link" onClick={() => setShowMenu(false)}>Products</Link>
           <Link to="/about" className="nav-link" onClick={() => setShowMenu(false)}>About</Link>
           <Link to="/blog" className="nav-link" onClick={() => setShowMenu(false)}>Blog</Link>
-          {role === 'buyer' && (
-            <Link to="/dashboard/buyer" className="nav-link" onClick={() => setShowMenu(false)}>Buyer Dashboard</Link>
-          )}
-          {role === 'seller' && (
-            <Link to="/dashboard/seller" className="nav-link" onClick={() => setShowMenu(false)}>Seller Dashboard</Link>
+          {role && (
+            <Link to={dashboardPath} className="nav-link" onClick={() => setShowMenu(false)}>Dashboard</Link>
           )}
           {role ? (
-            <button onClick={() => { handleLogout(); setShowMenu(false); }} className="btn-login">Logout</button>
+            <button onClick={() => { handleLogout(); setShowMenu(false); }} className="btn-logout">Logout</button>
           ) : (
             <>
               <Link to="/login" className="nav-link" onClick={() => setShowMenu(false)}>Login</Link>
