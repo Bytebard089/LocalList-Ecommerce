@@ -13,9 +13,13 @@ function Signup() {
 
   const handleSignup = async (e) => {
     e.preventDefault();
+    console.log("Trying to sign up with:", email, password, role);
+  
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
+  
+      console.log("User created:", user.uid);
   
       await setDoc(doc(db, 'users', user.uid), {
         name,
@@ -23,16 +27,28 @@ function Signup() {
         role,
       });
   
-      // ✅ Save to localStorage
+      // Save to localStorage
       localStorage.setItem("userRole", role);
       localStorage.setItem("userId", user.uid);
   
-      if (role === 'seller') navigate('/dashboard/seller');
-      else navigate('/dashboard/buyer');
+      if (role === 'seller') {
+        navigate('/dashboard/seller');
+      } else {
+        navigate('/dashboard/buyer');
+      }
   
     } catch (error) {
-      console.error('Signup Error:', error.message);
-      alert(error.message);
+      console.error("Signup error:", error.code, error.message);
+  
+      if (error.code === 'auth/email-already-in-use') {
+        alert("This email is already registered. Try logging in instead.");
+      } else if (error.code === 'auth/invalid-email') {
+        alert("Please enter a valid email address.");
+      } else if (error.code === 'auth/weak-password') {
+        alert("Password should be at least 6 characters.");
+      } else {
+        alert("Signup failed: " + error.message);
+      }
     }
   };
   

@@ -1,68 +1,77 @@
 import React, { useEffect, useState } from 'react';
 import { auth, db } from '../firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import {
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  where,
+  doc,
+  getDoc,
+} from 'firebase/firestore';
 
 function SellerDashboard() {
   const [sellerName, setSellerName] = useState('');
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      title: "Tribes India Handmade Blue Pottery Round Soap Dispenser",
-      price: "₹499",
-      image: "https://www.mystore.in/s/62ea2c599d1398fa16dbae0a/6597dc5f5f130b32398c10c5/1sptutirj00194-rnd-yellow-4--800x800.png",
-    },
-    {
-      id: 2,
-      title: "Clothikoo Women's Crop Top (Black, Flower Print)",
-      price: "₹299",
-      image: "https://www.mystore.in/s/62ea2c599d1398fa16dbae0a/g/adbf971a3f1e49d686ea8d552209571f/womens-crop-top-black-front-672ba172ddd16-800x800.jpeg",
-    },
-    {
-      id: 3,
-      title: "Men's Leather Blue Comfy Sneakers Casual Shoes",
-      price: "₹1200",
-      image: "https://www.mystore.in/s/62ea2c599d1398fa16dbae0a/65ffe7265d034cca5af51762/img_20240208_143415_615-800x800.jpg",
-      
-    },
-  ]);
-
+  const [products, setProducts] = useState([]);
   const [newProduct, setNewProduct] = useState({
-    name: '',
+    title: '',
     price: '',
     image: '',
     orders: 0,
   });
 
   useEffect(() => {
-    const fetchSellerName = async () => {
+    const fetchSellerData = async () => {
       const user = auth.currentUser;
       if (user) {
         const docRef = doc(db, 'users', user.uid);
         const docSnap = await getDoc(docRef);
+
         if (docSnap.exists()) {
-          const data = docSnap.data();
-          setSellerName(data.name || 'Seller');
+          const userData = docSnap.data();
+          setSellerName(userData.name || 'Seller');
         }
+
+        const q = query(collection(db, 'products'), where('sellerId', '==', user.uid));
+        const querySnapshot = await getDocs(q);
+        const sellerProducts = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setProducts(sellerProducts);
       }
     };
 
-    fetchSellerName();
+    fetchSellerData();
   }, []);
 
-  const handleAddProduct = (e) => {
+  const handleAddProduct = async (e) => {
     e.preventDefault();
-    if (!newProduct.name || !newProduct.price || !newProduct.image) {
-      alert('Fill all fields');
+    const user = auth.currentUser;
+
+    if (!newProduct.title || !newProduct.price || !newProduct.image) {
+      alert('Please fill all fields');
       return;
     }
-    setProducts([
-      {
+
+    try {
+      const docRef = await addDoc(collection(db, 'products'), {
         ...newProduct,
-        id: products.length + 1,
-      },
-      ...products,
-    ]);
-    setNewProduct({ name: '', price: '', image: '', orders: 0 });
+        sellerId: user.uid,
+        sellerName,
+        timestamp: new Date(),
+      });
+
+      setProducts([
+        { ...newProduct, id: docRef.id, orders: 0 },
+        ...products,
+      ]);
+
+      setNewProduct({ title: '', price: '', image: '', orders: 0 });
+    } catch (err) {
+      console.error('Error adding product:', err.message);
+      alert('Failed to add product');
+    }
   };
 
   return (
@@ -81,24 +90,30 @@ function SellerDashboard() {
         <form className="grid md:grid-cols-3 gap-4" onSubmit={handleAddProduct}>
           <input
             type="text"
-            placeholder="Product Name"
+            placeholder="Product Title"
             className="border px-4 py-2 rounded-lg text-sm"
-            value={newProduct.name}
-            onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+            value={newProduct.title}
+            onChange={(e) =>
+              setNewProduct({ ...newProduct, title: e.target.value })
+            }
           />
           <input
             type="text"
             placeholder="Price (e.g. ₹499)"
             className="border px-4 py-2 rounded-lg text-sm"
             value={newProduct.price}
-            onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
+            onChange={(e) =>
+              setNewProduct({ ...newProduct, price: e.target.value })
+            }
           />
           <input
             type="text"
             placeholder="Image URL"
             className="border px-4 py-2 rounded-lg text-sm"
             value={newProduct.image}
-            onChange={(e) => setNewProduct({ ...newProduct, image: e.target.value })}
+            onChange={(e) =>
+              setNewProduct({ ...newProduct, image: e.target.value })
+            }
           />
           <button
             type="submit"
@@ -112,25 +127,35 @@ function SellerDashboard() {
       {/* Product Grid */}
       <div className="max-w-7xl mx-auto">
         <h2 className="text-2xl font-bold text-gray-800 mb-6">Your Products</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {products.map((product) => (
-            <div
-              key={product.id}
-              className="bg-white rounded-xl border border-emerald-100 shadow-md hover:shadow-xl transition"
-            >
-              <img
-                src={product.image}
-                alt={product.name}
-                className="h-48 w-full object-cover rounded-t-xl"
-              />
-              <div className="p-4">
-                <h3 className="text-lg font-semibold text-gray-900">{product.name}</h3>
-                <p className="text-emerald-600 font-bold mt-1">{product.price}</p>
-                <p className="text-sm text-gray-500 mt-1">Orders: {product.orders}</p>
+        {products.length === 0 ? (
+          <p className="text-gray-500">No products added yet.</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {products.map((product) => (
+              <div
+                key={product.id}
+                className="bg-white rounded-xl border border-emerald-100 shadow-md hover:shadow-xl transition"
+              >
+                <img
+                  src={product.image}
+                  alt={product.title}
+                  className="h-48 w-full object-cover rounded-t-xl"
+                />
+                <div className="p-4">
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    {product.title}
+                  </h3>
+                  <p className="text-emerald-600 font-bold mt-1">
+                    {product.price}
+                  </p>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Orders: {product.orders || 0}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

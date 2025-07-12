@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../firebase';
 
-const products = [
+
+const hardcodedProducts = [
   {
     id: 1,
     title: "Tribes India Handmade Blue Pottery Round Soap Dispenser",
@@ -63,46 +66,48 @@ const products = [
 ];
 
 const renderStars = (rating) => {
-  const fullStars = Math.floor(rating);
-  const halfStar = rating - fullStars >= 0.5;
   return (
     <>
-      {[...Array(fullStars)].map((_, i) => (
-        <span key={i}>⭐</span>
+      {[...Array(5)].map((_, i) => (
+        <span key={i} className={i < rating ? 'text-yellow-400' : 'text-gray-300'}>★</span>
       ))}
-      {halfStar && <span>✩</span>}
     </>
   );
 };
 
 function Products() {
+  const [firestoreProducts, setFirestoreProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const querySnapshot = await getDocs(collection(db, 'products'));
+      const fetched = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setFirestoreProducts(fetched);
+    };
+
+    fetchProducts();
+  }, []);
+
+  const allProducts = [...firestoreProducts, ...hardcodedProducts];
+
   return (
     <div className="min-h-screen bg-[#f9f9f6] pt-24 pb-16 px-6 text-gray-900 font-[Poppins]">
       <h1 className="text-4xl font-extrabold text-center text-teal-900 mb-12">Featured Products</h1>
 
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-        {products.map((product) => (
-          <Link to={`/product/${product.id}`} key={product.id}>
-            <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 border border-gray-100 overflow-hidden group">
-              <div className="relative">
-                <img
-                  src={product.image}
-                  alt={product.title}
-                  className="w-full h-56 object-cover"
-                />
-                {product.offer && (
-                  <span className="absolute top-2 left-2 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded">
-                    {product.offer}
-                  </span>
-                )}
-              </div>
+        {allProducts.map((product, index) => (
+          <Link to={`/product/${product.id}`} key={index}>
+            <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition border border-gray-100 overflow-hidden group">
+              <img src={product.image} alt={product.title} className="w-full h-56 object-cover" />
               <div className="p-4 space-y-1">
                 <h2 className="text-base font-semibold text-gray-800 group-hover:text-teal-600">
                   {product.title}
                 </h2>
-                <p className="text-sm text-gray-600">{product.description}</p>
-                <div className="text-yellow-500 text-sm">{renderStars(product.rating)}</div>
-                <div className="mt-1 text-teal-700 font-bold text-lg">{product.price}</div>
+                <div className="text-sm">{renderStars(product.rating || 4)}</div>
+                <div className="text-teal-700 font-bold text-lg">{product.price}</div>
               </div>
             </div>
           </Link>
