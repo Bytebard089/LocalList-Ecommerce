@@ -1,55 +1,51 @@
 import React, { useEffect, useState } from 'react';
 import { auth, db } from '../firebase';
-import {
-  collection,
-  addDoc,
-  getDocs,
-  query,
-  where,
-  doc,
-  getDoc,
-} from 'firebase/firestore';
+import { collection, addDoc, getDocs, doc, getDoc, deleteDoc, query, where } from 'firebase/firestore';
 
 function SellerDashboard() {
   const [sellerName, setSellerName] = useState('');
+  const [sellerId, setSellerId] = useState('');
   const [products, setProducts] = useState([]);
   const [newProduct, setNewProduct] = useState({
     title: '',
     price: '',
     image: '',
-    orders: 0,
+    description: '',
   });
 
   useEffect(() => {
-    const fetchSellerData = async () => {
+    const fetchSellerInfoAndProducts = async () => {
       const user = auth.currentUser;
       if (user) {
-        const docRef = doc(db, 'users', user.uid);
-        const docSnap = await getDoc(docRef);
+        const uid = user.uid;
+        setSellerId(uid);
 
+        const docRef = doc(db, 'users', uid);
+        const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          const userData = docSnap.data();
-          setSellerName(userData.name || 'Seller');
+          const data = docSnap.data();
+          setSellerName(data.name || 'Seller');
+          localStorage.setItem('sellerName', data.name);
         }
 
-        const q = query(collection(db, 'products'), where('sellerId', '==', user.uid));
-        const querySnapshot = await getDocs(q);
-        const sellerProducts = querySnapshot.docs.map(doc => ({
+        // Fetch seller's products
+        const q = query(collection(db, 'products'), where('sellerId', '==', uid));
+        const snapshot = await getDocs(q);
+        const productList = snapshot.docs.map(doc => ({
           id: doc.id,
-          ...doc.data(),
+          ...doc.data()
         }));
-        setProducts(sellerProducts);
+        setProducts(productList);
       }
     };
 
-    fetchSellerData();
+    fetchSellerInfoAndProducts();
   }, []);
 
   const handleAddProduct = async (e) => {
     e.preventDefault();
-    const user = auth.currentUser;
-
-    if (!newProduct.title || !newProduct.price || !newProduct.image) {
+    const { title, price, image, description } = newProduct;
+    if (!title || !price || !image || !description) {
       alert('Please fill all fields');
       return;
     }
@@ -57,26 +53,29 @@ function SellerDashboard() {
     try {
       const docRef = await addDoc(collection(db, 'products'), {
         ...newProduct,
-        sellerId: user.uid,
+        sellerId,
         sellerName,
-        timestamp: new Date(),
       });
+      setProducts([{ id: docRef.id, ...newProduct, sellerId, sellerName }, ...products]);
+      setNewProduct({ title: '', price: '', image: '', description: '' });
+    } catch (error) {
+      console.error('Error adding product:', error.message);
+    }
+  };
 
-      setProducts([
-        { ...newProduct, id: docRef.id, orders: 0 },
-        ...products,
-      ]);
+  const handleDeleteProduct = async (productId) => {
+    if (!window.confirm('Delete this product?')) return;
 
-      setNewProduct({ title: '', price: '', image: '', orders: 0 });
+    try {
+      await deleteDoc(doc(db, 'products', productId));
+      setProducts(products.filter((product) => product.id !== productId));
     } catch (err) {
-      console.error('Error adding product:', err.message);
-      alert('Failed to add product');
+      console.error('Error deleting product:', err.message);
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#f7fafc] to-[#edfdfd] pt-28 pb-20 px-6 font-[Poppins] text-gray-800">
-      {/* Header */}
       <div className="max-w-7xl mx-auto mb-10">
         <h1 className="text-4xl font-extrabold text-emerald-700 mb-2">
           Welcome, {sellerName}!
@@ -87,34 +86,35 @@ function SellerDashboard() {
       {/* Add Product Form */}
       <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-6 mb-14 border border-emerald-100">
         <h2 className="text-2xl font-bold text-emerald-700 mb-4">Add New Product</h2>
-        <form className="grid md:grid-cols-3 gap-4" onSubmit={handleAddProduct}>
+        <form className="grid md:grid-cols-2 gap-4" onSubmit={handleAddProduct}>
           <input
             type="text"
             placeholder="Product Title"
             className="border px-4 py-2 rounded-lg text-sm"
             value={newProduct.title}
-            onChange={(e) =>
-              setNewProduct({ ...newProduct, title: e.target.value })
-            }
+            onChange={(e) => setNewProduct({ ...newProduct, title: e.target.value })}
           />
           <input
             type="text"
             placeholder="Price (e.g. ₹499)"
             className="border px-4 py-2 rounded-lg text-sm"
             value={newProduct.price}
-            onChange={(e) =>
-              setNewProduct({ ...newProduct, price: e.target.value })
-            }
+            onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
           />
           <input
             type="text"
             placeholder="Image URL"
             className="border px-4 py-2 rounded-lg text-sm"
             value={newProduct.image}
-            onChange={(e) =>
-              setNewProduct({ ...newProduct, image: e.target.value })
-            }
+            onChange={(e) => setNewProduct({ ...newProduct, image: e.target.value })}
           />
+          <textarea
+            placeholder="Description"
+            rows={3}
+            className="border px-4 py-2 rounded-lg text-sm md:col-span-2"
+            value={newProduct.description}
+            onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+          ></textarea>
           <button
             type="submit"
             className="col-span-full md:col-auto bg-teal-600 text-white py-2 rounded-lg font-medium hover:bg-teal-700 transition"
@@ -127,35 +127,31 @@ function SellerDashboard() {
       {/* Product Grid */}
       <div className="max-w-7xl mx-auto">
         <h2 className="text-2xl font-bold text-gray-800 mb-6">Your Products</h2>
-        {products.length === 0 ? (
-          <p className="text-gray-500">No products added yet.</p>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {products.map((product) => (
-              <div
-                key={product.id}
-                className="bg-white rounded-xl border border-emerald-100 shadow-md hover:shadow-xl transition"
-              >
-                <img
-                  src={product.image}
-                  alt={product.title}
-                  className="h-48 w-full object-cover rounded-t-xl"
-                />
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    {product.title}
-                  </h3>
-                  <p className="text-emerald-600 font-bold mt-1">
-                    {product.price}
-                  </p>
-                  <p className="text-sm text-gray-500 mt-1">
-                    Orders: {product.orders || 0}
-                  </p>
-                </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {products.map((product) => (
+            <div
+              key={product.id}
+              className="bg-white rounded-xl border border-emerald-100 shadow-md hover:shadow-xl transition relative"
+            >
+              <img
+                src={product.image}
+                alt={product.title}
+                className="h-48 w-full object-cover rounded-t-xl"
+              />
+              <div className="p-4">
+                <h3 className="text-lg font-semibold text-gray-900">{product.title}</h3>
+                <p className="text-emerald-600 font-bold mt-1">{product.price}</p>
+                <p className="text-sm text-gray-500 mt-1">{product.description}</p>
               </div>
-            ))}
-          </div>
-        )}
+              <button
+                onClick={() => handleDeleteProduct(product.id)}
+                className="absolute top-2 right-2 bg-red-500 text-white text-xs px-3 py-1 rounded-full hover:bg-red-600"
+              >
+                Delete
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

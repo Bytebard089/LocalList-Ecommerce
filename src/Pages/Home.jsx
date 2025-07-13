@@ -5,7 +5,7 @@ const sellers = [
     name: "Milind Bansal",
     city: "Punjab",
     story: "The team helped me set up everything. Grateful!",
-    avatar: "https://d3dyfaf3iutrxo.cloudfront.net/thumbnail/user/313f70fd9e6647f5b2d2bcb04240d5f2.jpeg",
+    avatar: "blob:https://web.whatsapp.com/5d5ae0cb-41d5-465f-a6e1-fba5d78e62e4",
   },
   {
     name: "Shreya Suman",

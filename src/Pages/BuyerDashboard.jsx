@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { db } from '../firebase';
+import { collection, getDocs } from 'firebase/firestore';
 
 const orders = [
   { id: 1, product: 'Handmade Clay Pottery', date: '2025-06-01', status: 'Delivered' },
@@ -11,12 +13,25 @@ const wishlist = [
   { name: 'Women Fancy Dress', image: 'https://images.meesho.com/images/products/426443566/jvzf7_512.webp' },
 ];
 
-const cart = [
-  { product: 'Natural Jaggery Candy', price: '₹150', quantity: 2 },
-  { product: 'Handwoven Bag', price: '₹800', quantity: 1 },
-];
-
 function BuyerDashboard() {
+  const [cart, setCart] = useState([]);
+  const userId = localStorage.getItem("userId");
+
+  useEffect(() => {
+    const fetchCart = async () => {
+      if (!userId) return;
+      try {
+        const querySnapshot = await getDocs(collection(db, 'carts', userId, 'items'));
+        const cartItems = querySnapshot.docs.map(doc => doc.data());
+        setCart(cartItems);
+      } catch (err) {
+        console.error("Failed to fetch cart:", err);
+      }
+    };
+
+    fetchCart();
+  }, [userId]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f9fafb] to-[#edf7f6] text-gray-800 font-[Poppins] px-6 pt-28 pb-10">
 
@@ -67,26 +82,32 @@ function BuyerDashboard() {
         {/* Cart Section */}
         <section>
           <h2 className="text-2xl font-semibold text-teal-700 mb-6">🛒 Your Cart</h2>
-          <div className="bg-white rounded-2xl shadow-md overflow-hidden">
-            <table className="w-full text-left">
-              <thead className="bg-teal-100 text-teal-800 text-sm">
-                <tr>
-                  <th className="p-4">Product</th>
-                  <th className="p-4">Price</th>
-                  <th className="p-4">Quantity</th>
-                </tr>
-              </thead>
-              <tbody className="text-gray-700">
-                {cart.map((item, index) => (
-                  <tr key={index} className="border-t">
-                    <td className="p-4">{item.product}</td>
-                    <td className="p-4">{item.price}</td>
-                    <td className="p-4">{item.quantity}</td>
+          {cart.length > 0 ? (
+            <div className="bg-white rounded-2xl shadow-md overflow-hidden">
+              <table className="w-full text-left">
+                <thead className="bg-teal-100 text-teal-800 text-sm">
+                  <tr>
+                    <th className="p-4">Product</th>
+                    <th className="p-4">Price</th>
+                    <th className="p-4">Added On</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="text-gray-700">
+                  {cart.map((item, index) => (
+                    <tr key={index} className="border-t">
+                      <td className="p-4">{item.title}</td>
+                      <td className="p-4">{item.price}</td>
+                      <td className="p-4">{new Date(item.addedAt?.seconds * 1000).toLocaleDateString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="text-gray-500 text-center bg-white py-8 rounded-lg shadow">
+              Your cart is empty.
+            </div>
+          )}
         </section>
       </div>
     </div>
