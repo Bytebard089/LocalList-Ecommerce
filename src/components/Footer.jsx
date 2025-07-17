@@ -1,108 +1,56 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-function Navbar() {
-  const [showMenu, setShowMenu] = useState(false);
-  const navigate = useNavigate();
-
-  const role = localStorage.getItem("userRole");
-
-  const handleLogout = () => {
-    localStorage.removeItem("userRole");
-    localStorage.removeItem("userId");
-    navigate('/login');
-  };
-
+function Footer() {
   return (
-    <nav className="fixed top-0 left-0 w-full bg-white shadow-md z-50 font-inter">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-        
-        {/* Logo */}
-        <Link to="/" className="text-3xl font-pacifico text-teal-700 tracking-wide">
-          VyapaarSetu
-        </Link>
-
-        {/* Desktop Links */}
-        <div className="hidden md:flex gap-6 text-[17px]">
-          <NavLink to="/" label="Home" />
-          <NavLink to="/products" label="Products" />
-          <NavLink to="/about" label="About" />
-          <NavLink to="/blog" label="Blog" />
-          {role === 'buyer' && <NavLink to="/dashboard/buyer" label="Buyer Dashboard" />}
-          {role === 'seller' && <NavLink to="/dashboard/seller" label="Seller Dashboard" />}
+    <footer className="bg-[#e6f4f2] text-[#0f766e] py-12 px-6 font-[Inter]">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
+        {/* Logo & Tagline */}
+        <div>
+          <h1 className="text-3xl font-bold tracking-wide mb-3 font-[Winky Rough] text-[#0f766e]">
+            VyapaarSetu
+          </h1>
+          <p className="text-sm text-teal-900 leading-relaxed">
+            A platform to empower Bharat’s sellers and buyers with transparency and trust.
+          </p>
         </div>
 
-        {/* Buttons */}
-        <div className="hidden md:flex gap-4 items-center">
-          {!role ? (
-            <>
-              <Link
-                to="/login"
-                className="px-4 py-2 border border-teal-600 rounded-xl text-teal-600 hover:bg-teal-50 transition duration-300"
-              >
-                Login
-              </Link>
-              <Link
-                to="/signup"
-                className="px-4 py-2 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-xl shadow hover:brightness-110 transition"
-              >
-                Signup
-              </Link>
-            </>
-          ) : (
-            <button
-              onClick={handleLogout}
-              className="px-4 py-2 border border-rose-500 text-rose-600 rounded-xl hover:bg-rose-50 transition"
-            >
-              Logout
-            </button>
-          )}
+        {/* Support */}
+        <div>
+          <h3 className="text-lg font-semibold mb-3">Support</h3>
+          <ul className="space-y-2 text-sm text-teal-800">
+            <li><Link to="#" className="hover:underline">Help Center</Link></li>
+            <li><Link to="#" className="hover:underline">Contact Us</Link></li>
+            <li><Link to="#" className="hover:underline">Shipping Info</Link></li>
+          </ul>
         </div>
 
-        {/* Mobile Toggle */}
-        <div className="md:hidden text-3xl text-teal-700 cursor-pointer" onClick={() => setShowMenu(!showMenu)}>
-          ☰
+        {/* Company */}
+        <div>
+          <h3 className="text-lg font-semibold mb-3">Company</h3>
+          <ul className="space-y-2 text-sm text-teal-800">
+            <li><Link to="/about" className="hover:underline">About Us</Link></li>
+            <li><Link to="/blog" className="hover:underline">Blog</Link></li>
+            <li><Link to="#" className="hover:underline">Careers</Link></li>
+          </ul>
+        </div>
+
+        {/* Social Links */}
+        <div>
+          <h3 className="text-lg font-semibold mb-3">Connect</h3>
+          <ul className="space-y-2 text-sm text-teal-800">
+            <li><a href="#" className="hover:underline">Instagram</a></li>
+            <li><a href="#" className="hover:underline">LinkedIn</a></li>
+            <li><a href="#" className="hover:underline">Twitter</a></li>
+          </ul>
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      {showMenu && (
-        <div className="md:hidden bg-white px-6 pb-6 space-y-3 text-[16px]">
-          <NavLink to="/" label="Home" closeMenu={() => setShowMenu(false)} />
-          <NavLink to="/products" label="Products" closeMenu={() => setShowMenu(false)} />
-          <NavLink to="/about" label="About" closeMenu={() => setShowMenu(false)} />
-          <NavLink to="/blog" label="Blog" closeMenu={() => setShowMenu(false)} />
-          {role === 'buyer' && (
-            <NavLink to="/dashboard/buyer" label="Buyer Dashboard" closeMenu={() => setShowMenu(false)} />
-          )}
-          {role === 'seller' && (
-            <NavLink to="/dashboard/seller" label="Seller Dashboard" closeMenu={() => setShowMenu(false)} />
-          )}
-          {!role ? (
-            <>
-              <Link to="/login" className="block text-teal-600" onClick={() => setShowMenu(false)}>Login</Link>
-              <Link to="/signup" className="block text-teal-600" onClick={() => setShowMenu(false)}>Signup</Link>
-            </>
-          ) : (
-            <button onClick={() => { handleLogout(); setShowMenu(false); }} className="text-rose-600">
-              Logout
-            </button>
-          )}
-        </div>
-      )}
-    </nav>
+      <div className="text-center text-gray-600 text-xs mt-10">
+        © {new Date().getFullYear()} <span className="font-semibold">VyapaarSetu</span>. All rights reserved.
+      </div>
+    </footer>
   );
 }
 
-const NavLink = ({ to, label, closeMenu }) => (
-  <Link
-    to={to}
-    onClick={closeMenu}
-    className="relative group text-gray-700 hover:text-teal-600 transition"
-  >
-    {label}
-    <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-teal-500 group-hover:w-full transition-all duration-300"></span>
-  </Link>
-);
-
-export default Navbar;
+export default Footer;

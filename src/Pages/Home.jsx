@@ -1,30 +1,26 @@
 import React from 'react';
-
+import Footer from '../components/Footer'; 
 const sellers = [
   
   {
     name: "Shreya Suman",
     city: "Bihar",
     story: "The platform is easy to use. Orders managed from phone!",
-    avatar: "https://d3dyfaf3iutrxo.cloudfront.net/thumbnail/user/70dfa73a0dba47ada2d24965f70cc7a4.jpeg",
   },
   {
     name: "Milind Bansal",
     city: "Punjab",
     story: "The team helped me set up everything. Grateful!",
-    avatar: "https://d3dyfaf3iutrxo.cloudfront.net/thumbnail/user/313f70fd9e6647f5b2d2bcb04240d5f2.jpeg",
   },
   {
     name: "Harshita Joshi",
     city: "Gujarat",
     story: "My products now reach across India. Business tripled in 6 months.",
-    avatar: "https://d3dyfaf3iutrxo.cloudfront.net/thumbnail/user/a8f87d67940a4d3a8ccc1329e365ec78.jpeg",
   },
   {
     name: "Soumya Tiwari",
     city: "Delhi",
     story: "Finally, a platform that values local artisans like us.",
-    avatar: "https://d3dyfaf3iutrxo.cloudfront.net/thumbnail/user/ce04246f51014864aebfec77a840f4d7.jpeg",
   },
   
 ];
@@ -59,18 +55,18 @@ const products = [
 
 function Home() {
   return (
-    <div className="min-h-screen font-[Poppins] text-gray-800 bg-[#f9f9f6]">
+    <div className="min-h-screen font-body text-gray-800 bg-[#f9f9f6]">
 
       {/* Hero */}
-      <section className="relative flex flex-col md:flex-row items-center max-w-7xl mx-auto pt-24 px-6 pb-16 gap-10">
-        <div className="z-10 flex-1 max-w-lg space-y-8">
-          <h1 className="text-5xl font-extrabold tracking-tight leading-tight text-gray-900">
+      <section className="relative flex flex-col md:flex-row items-center max-w-7xl mx-auto pt-28 px-6 pb-20 gap-10">
+        <div className="z-10 flex-1 max-w-lg space-y-8 text-center md:text-left">
+          <h1 className="text-5xl font-extrabold leading-tight tracking-tight text-gray-900 font-heading">
             Welcome to <span className="text-[#0f766e]">VyapaarSetu</span>
           </h1>
           <p className="text-lg text-gray-600">
             Empowering local sellers, connecting conscious buyers. Made in Bharat.
           </p>
-          <button className="bg-[#0f766e] text-white px-6 py-3 rounded-full text-lg font-medium shadow-md hover:bg-[#0e5f5a] transition">
+          <button className="bg-[#0f766e] text-white px-6 py-3 rounded-full text-lg font-medium shadow-md hover:scale-105 transition">
             Start Exploring
           </button>
         </div>
@@ -79,60 +75,55 @@ function Home() {
           <img
             src="https://www.salesforce.com/au/blog/wp-content/uploads/sites/4/2024/01/ecommerce-trends.jpg?w=889"
             alt="Ecommerce"
-            className="rounded-xl shadow-xl object-cover max-h-[400px] mx-auto"
+            className="rounded-3xl shadow-xl object-cover max-h-[400px] mx-auto"
           />
         </div>
       </section>
 
       {/* Why VyapaarSetu */}
       <section className="max-w-7xl mx-auto px-6 my-20">
-        <div className="grid md:grid-cols-2 gap-16 items-center bg-white p-10 rounded-3xl shadow-md">
+        <div className="grid md:grid-cols-2 gap-16 items-center bg-white p-10 rounded-[2rem] shadow-xl">
           <div className="space-y-8">
-            <h2 className="text-3xl font-bold text-[#0f766e]">Objectives of VyapaarSetu</h2>
+            <h2 className="text-3xl font-heading font-bold text-[#0f766e]">Objectives of VyapaarSetu</h2>
             <div className="space-y-6 text-gray-700">
-              <div>
-                <h4 className="text-xl font-semibold">Enhancing Competition</h4>
-                <p>The goal is to break the monopoly of big digital platforms, which means you’ll have more options to choose from</p>
-              </div>
-              <div>
-                <h4 className="text-xl font-semibold">Embracing Digital Transformation</h4>
-                <p>This means helping businesses make a smooth transition to digital technologies, making your online experience better.</p>
-              </div>
-              <div>
-                <h4 className="text-xl font-semibold">Ensuring Fairness and Access</h4>
-                <p>The objective is to ensure even small businesses and local shops have a fair shot online, giving you more choices.</p>
-              </div>
-              <div>
-                <h4 className="text-xl font-semibold">Improving Delivery</h4>
-                <p>By making deliveries more efficient, you’ll get your orders faster and with fewer hassles.</p>
-              </div>
+              {[
+                { title: "Enhancing Competition", desc: "Breaking monopoly of big platforms. More choices for you." },
+                { title: "Embracing Digital Transformation", desc: "Helping sellers go digital. Better experiences for all." },
+                { title: "Ensuring Fairness and Access", desc: "Even small shops get a fair shot online." },
+                { title: "Improving Delivery", desc: "Faster deliveries. Fewer hassles." },
+              ].map((item, i) => (
+                <div key={i}>
+                  <h4 className="text-xl font-semibold">{item.title}</h4>
+                  <p>{item.desc}</p>
+                </div>
+              ))}
             </div>
           </div>
           <img
             src="https://img.freepik.com/free-vector/support-local-business-concept_23-2148599970.jpg?semt=ais_hybrid&w=740"
             alt="India Map"
-            className="rounded-xl"
+            className="rounded-xl shadow-md"
           />
         </div>
       </section>
 
       {/* Featured Products */}
       <section className="max-w-7xl mx-auto px-6 my-24">
-        <h2 className="text-3xl font-bold mb-10 text-center text-gray-800">Featured Products</h2>
+        <h2 className="text-3xl font-heading font-bold mb-10 text-center text-gray-800">✨ Featured Products</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {products.map(product => (
             <div
               key={product.id}
-              className="bg-[#ffffff] border border-gray-200 rounded-2xl shadow-sm hover:shadow-lg transition duration-300"
+              className="bg-white border border-gray-100 rounded-2xl shadow hover:shadow-lg transition duration-300 hover:scale-[1.02]"
             >
               <img
                 src={product.image}
                 alt={product.title}
-                className="w-full h-48 object-cover rounded-t-2xl hover:scale-105 transition-transform duration-300"
+                className="w-full h-48 object-cover rounded-t-2xl"
               />
-              <div className="p-4">
-                <h3 className="text-lg font-medium">{product.title}</h3>
-                <p className="mt-1 text-[#0f766e] font-semibold">{product.price}</p>
+              <div className="p-4 text-center">
+                <h3 className="text-md font-semibold">{product.title}</h3>
+                <p className="mt-1 text-[#0f766e] font-bold">{product.price}</p>
               </div>
             </div>
           ))}
@@ -142,35 +133,31 @@ function Home() {
       {/* Join the Movement */}
       <section className="bg-gradient-to-r from-[#e0f7f4] to-[#f5fefd] py-20">
         <div className="max-w-6xl mx-auto text-center px-6">
-          <h2 className="text-3xl font-bold text-[#0f766e] mb-12">Join the Movement</h2>
-          <div className="grid md:grid-cols-3 gap-10">
-            <div>
-              <div className="text-5xl mb-4">🤝</div>
-              <h3 className="font-semibold text-xl mb-2">No Middlemen</h3>
-              <p>Direct seller-to-buyer platform with transparency.</p>
-            </div>
-            <div>
-              <div className="text-5xl mb-4">🏪</div>
-              <h3 className="font-semibold text-xl mb-2">Your Own Store</h3>
-              <p>Create your storefront in minutes — zero setup hassle.</p>
-            </div>
-            <div>
-              <div className="text-5xl mb-4">🚀</div>
-              <h3 className="font-semibold text-xl mb-2">Get Started Fast</h3>
-              <p>Easy onboarding, responsive support, instant visibility.</p>
-            </div>
+          <h2 className="text-3xl font-heading font-bold text-[#0f766e] mb-12">Join the Movement</h2>
+          <div className="grid md:grid-cols-3 gap-10 text-gray-700">
+            {[
+              { icon: "🤝", title: "No Middlemen", desc: "Direct seller-to-buyer platform with transparency." },
+              { icon: "🏪", title: "Your Own Store", desc: "Create your storefront in minutes." },
+              { icon: "🚀", title: "Get Started Fast", desc: "Easy onboarding & instant visibility." },
+            ].map((item, i) => (
+              <div key={i}>
+                <div className="text-5xl mb-4">{item.icon}</div>
+                <h3 className="font-semibold text-xl mb-2">{item.title}</h3>
+                <p>{item.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Seller Stories */}
       <section className="bg-[#fefefe] py-20 px-6">
-        <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">Seller Stories</h2>
+        <h2 className="text-3xl font-heading font-bold text-center mb-12 text-gray-800">🌟 Seller Stories</h2>
         <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
           {sellers.map((seller, i) => (
             <div
               key={i}
-              className="bg-white border border-gray-100 rounded-2xl p-6 text-center shadow hover:shadow-md transition"
+              className="bg-white border border-gray-100 rounded-2xl p-6 text-center shadow hover:shadow-md transition hover:scale-105"
             >
               <img
                 src={seller.avatar}
@@ -179,44 +166,14 @@ function Home() {
               />
               <h4 className="font-semibold text-lg text-gray-900">{seller.name}</h4>
               <p className="text-sm text-gray-500 mb-2">{seller.city}</p>
-              <p>{seller.story}</p>
+              <p className="text-sm">{seller.story}</p>
             </div>
           ))}
         </div>
       </section>
+          <Footer />
 
-      {/* Footer */}
-      <footer className="bg-[#e6f0ed] text-[#0f766e] py-10">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between gap-10">
-          <div>
-            <h3 className="text-lg font-bold">VyapaarSetu</h3>
-            <p className="text-sm text-gray-600">Made in Bharat, for Bharat.</p>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-6 text-sm text-gray-700">
-            <div>
-              <h4 className="font-semibold mb-2">Support</h4>
-              <ul className="space-y-1">
-                <li><a href="#" className="hover:text-[#0f766e]">Help Center</a></li>
-                <li><a href="#" className="hover:text-[#0f766e]">Contact</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-2">Legal</h4>
-              <ul className="space-y-1">
-                <li><a href="#" className="hover:text-[#0f766e]">Privacy</a></li>
-                <li><a href="#" className="hover:text-[#0f766e]">Terms</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-2">Follow Us</h4>
-              <ul className="space-y-1">
-                <li><a href="#" className="hover:text-[#0f766e]">Instagram</a></li>
-                <li><a href="#" className="hover:text-[#0f766e]">LinkedIn</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </footer>
+     
     </div>
   );
 }
