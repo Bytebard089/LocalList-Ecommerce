@@ -1,26 +1,31 @@
 import React from 'react';
-import Footer from '../components/Footer'; 
+import Footer from '../components/Footer';
+
 const sellers = [
   
   {
     name: "Shreya Suman",
     city: "Bihar",
     story: "The platform is easy to use. Orders managed from phone!",
+    avatar:"https://media.istockphoto.com/id/1435566677/vector/placeholder-icon-illustration.jpg?s=612x612&w=0&k=20&c=mMfFWN3fGUOv5S75bC5tmMSzFDNoqiCQFfVoMTsC4n0="
   },
   {
     name: "Milind Bansal",
     city: "Punjab",
     story: "The team helped me set up everything. Grateful!",
+    avatar:"https://media.istockphoto.com/id/1435566677/vector/placeholder-icon-illustration.jpg?s=612x612&w=0&k=20&c=mMfFWN3fGUOv5S75bC5tmMSzFDNoqiCQFfVoMTsC4n0="
   },
   {
     name: "Harshita Joshi",
     city: "Gujarat",
     story: "My products now reach across India. Business tripled in 6 months.",
+    avatar:"https://media.istockphoto.com/id/1435566677/vector/placeholder-icon-illustration.jpg?s=612x612&w=0&k=20&c=mMfFWN3fGUOv5S75bC5tmMSzFDNoqiCQFfVoMTsC4n0="
   },
   {
     name: "Soumya Tiwari",
     city: "Delhi",
     story: "Finally, a platform that values local artisans like us.",
+    avatar:"https://media.istockphoto.com/id/1435566677/vector/placeholder-icon-illustration.jpg?s=612x612&w=0&k=20&c=mMfFWN3fGUOv5S75bC5tmMSzFDNoqiCQFfVoMTsC4n0="
   },
   
 ];
@@ -57,8 +62,11 @@ function Home() {
   return (
     <div className="min-h-screen font-body text-gray-800 bg-[#f9f9f6]">
 
-      {/* Hero */}
+      {/* Hero with gradient */}
       <section className="relative flex flex-col md:flex-row items-center max-w-7xl mx-auto pt-28 px-6 pb-20 gap-10">
+        {/* Gradient Background Layer */}
+        <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-[#0f766e1a] via-[#e6f9f7] to-transparent z-0 rounded-bl-[5rem]"></div>
+
         <div className="z-10 flex-1 max-w-lg space-y-8 text-center md:text-left">
           <h1 className="text-5xl font-extrabold leading-tight tracking-tight text-gray-900 font-heading">
             Welcome to <span className="text-[#0f766e]">VyapaarSetu</span>
@@ -93,8 +101,8 @@ function Home() {
                 { title: "Improving Delivery", desc: "Faster deliveries. Fewer hassles." },
               ].map((item, i) => (
                 <div key={i}>
-                  <h4 className="text-xl font-semibold">{item.title}</h4>
-                  <p>{item.desc}</p>
+                  <h4 className="text-xl font-semibold text-gray-800">{item.title}</h4>
+                  <p className="text-gray-600 font-medium">{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -142,8 +150,8 @@ function Home() {
             ].map((item, i) => (
               <div key={i}>
                 <div className="text-5xl mb-4">{item.icon}</div>
-                <h3 className="font-semibold text-xl mb-2">{item.title}</h3>
-                <p>{item.desc}</p>
+                <h3 className="font-semibold text-xl text-gray-800 mb-2">{item.title}</h3>
+                <p className="font-medium text-gray-600">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -171,9 +179,9 @@ function Home() {
           ))}
         </div>
       </section>
-          <Footer />
 
-     
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
