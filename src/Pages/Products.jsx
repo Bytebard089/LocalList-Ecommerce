@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
 import { AiFillStar } from 'react-icons/ai';
-import Footer from '../components/Footer'; 
+import Footer from '../components/Footer';
 
 const producti = [
   {
     id: 'hc1',
-    title: "Tribes India Handmade Blue Pottery Round Soap Dispenser",
+    title: "Soap Dispenser",
     price: 499,
     mrp: 699,
     rating: 4.5,
@@ -63,13 +63,13 @@ const Products = () => {
   const allProducts = [...firestoreProducts, ...producti];
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#f9f9f6] font-[Inter]">
+    <div className="flex flex-col min-h-screen bg-[#f9f9f6] font-[Inter] overflow-x-hidden">
       <main className="flex-grow pt-24 pb-16 px-4 sm:px-6">
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-center text-[#0f766e] mb-12 tracking-tight">
-          Explore Products
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-heading font-bold mb-12 text-center text-teal-800 tracking-tight">
+          ✨ Featured Products
         </h1>
 
-        <div className="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {allProducts.map((product, index) => {
             const discount =
               product.mrp && product.price
@@ -78,32 +78,32 @@ const Products = () => {
 
             return (
               <Link to={`/product/${product.id}`} key={index}>
-                <div className="bg-white rounded-lg shadow-sm hover:shadow-lg hover:border hover:border-gray-400 transition duration-200 p-3 group">
+                <div className="bg-white rounded-xl border border-gray-100 shadow hover:shadow-md hover:border-gray-300 transition duration-300 p-4 group">
                   <img
                     src={product.image}
                     alt={product.title}
-                    className="w-full h-40 object-contain mb-2"
+                    className="w-full h-40 sm:h-48 object-contain mb-3"
                   />
 
-                  <div className="text-sm text-gray-800 line-clamp-2 font-medium leading-tight">
+                  <div className="text-sm font-semibold text-gray-800 line-clamp-2">
                     {product.title}
                   </div>
 
-                  <div className="text-xs text-gray-500 mt-[2px]">White, Cable Included</div>
+                  <div className="text-xs text-gray-500 mt-1">White, Cable Included</div>
 
-                  <div className="flex items-center text-xs font-semibold space-x-1 mt-1">
+                  <div className="flex items-center text-xs font-semibold space-x-1 mt-2">
                     <span className="bg-green-600 text-white px-2 py-[2px] rounded flex items-center gap-1">
                       {(product.rating || 4).toFixed(1)} <AiFillStar className="text-yellow-300 text-xs" />
                     </span>
                     <span className="text-gray-500">({product.reviews || '1,200'})</span>
                   </div>
 
-                  <div className="mt-1 flex items-center space-x-2">
+                  <div className="mt-2 flex items-center space-x-2">
                     <span className="text-[#0f766e] font-bold text-md">₹{product.price}</span>
                     {product.mrp && (
                       <>
                         <del className="text-gray-500 text-sm">₹{product.mrp}</del>
-                        <span className="text-green-600 font-semibold text-sm">{discount}</span>
+                        <span className="text-green-600 font-medium text-sm">{discount}</span>
                       </>
                     )}
                   </div>

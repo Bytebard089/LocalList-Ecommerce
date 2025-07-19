@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Footer from '../components/Footer';
 
 const blogPosts = [
   {
@@ -39,46 +40,50 @@ function Blog() {
   };
 
   return (
-    <div className="min-h-screen pt-28 pb-16 px-4 bg-gradient-to-br from-[#f0fdf4] via-[#f8fafc] to-[#e0f2fe] text-gray-800 font-[Poppins]">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl md:text-5xl font-extrabold text-center text-teal-800 mb-4 tracking-tight">
-          Our Stories & Insights
-        </h1>
-        <p className="text-center text-gray-600 text-md md:text-lg mb-12 max-w-2xl mx-auto">
-          Real journeys, bold ideas, and voices from across Bharat, brought together by VyapaarSetu.
-        </p>
+    <>
+      <div className="min-h-screen pt-28 pb-20 px-4 sm:px-6 bg-gradient-to-br from-[#ecfdf5] via-[#f8fafc] to-[#e0f2fe] text-gray-800 font-[Inter]">
+        <div className="max-w-6xl mx-auto">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-heading font-bold text-center text-teal-800 mb-6">
+            Our Stories & Insights
+          </h1>
+          <p className="text-center text-gray-600 text-md md:text-lg mb-12 max-w-2xl mx-auto">
+            Real journeys, bold ideas, and voices from across Bharat, brought together by VyapaarSetu.
+          </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          {blogPosts.map((post, index) => (
-            <div
-              key={index}
-              className="relative bg-white/70 backdrop-blur-xl border border-teal-100 shadow-xl rounded-2xl p-6 transition-all hover:shadow-2xl"
-            >
-              <div className="absolute -top-6 -left-6 w-20 h-20 bg-teal-200 rounded-full blur-2xl opacity-30 pointer-events-none"></div>
-
-              <p className="text-sm text-teal-500 mb-2 font-semibold">{post.date}</p>
-              <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 tracking-wide">
-                {post.title}
-              </h2>
-              <p className="text-sm text-gray-700 leading-relaxed mb-4">{post.excerpt}</p>
-
-              {expandedIndex === index && (
-                <p className="text-sm text-gray-800 mb-4 transition-all duration-300 ease-in-out">
-                  {post.fullContent}
-                </p>
-              )}
-
-              <button
-                onClick={() => toggleExpand(index)}
-                className="text-sm text-teal-700 hover:text-teal-900 font-medium underline transition duration-150"
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
+            {blogPosts.map((post, index) => (
+              <div
+                key={index}
+                className="relative bg-white/80 backdrop-blur-xl border border-teal-100 shadow-lg hover:shadow-xl rounded-2xl p-6 transition duration-300"
               >
-                {expandedIndex === index ? "Show Less" : "Read More"}
-              </button>
-            </div>
-          ))}
+                <div className="absolute -top-6 -left-6 w-20 h-20 bg-teal-200 rounded-full blur-2xl opacity-30 pointer-events-none"></div>
+
+                <p className="text-sm text-teal-600 mb-2 font-semibold">{post.date}</p>
+                <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 tracking-wide">
+                  {post.title}
+                </h2>
+                <p className="text-sm text-gray-700 leading-relaxed mb-4">{post.excerpt}</p>
+
+                {expandedIndex === index && (
+                  <p className="text-sm text-gray-800 mb-4 transition-all duration-300 ease-in-out">
+                    {post.fullContent}
+                  </p>
+                )}
+
+                <button
+                  onClick={() => toggleExpand(index)}
+                  className="text-sm text-teal-700 hover:text-teal-900 font-medium underline transition duration-150"
+                >
+                  {expandedIndex === index ? "Show Less" : "Read More"}
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+
+      <Footer />
+    </>
   );
 }
 

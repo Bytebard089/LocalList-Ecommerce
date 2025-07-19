@@ -4,16 +4,18 @@ import Footer from '../components/Footer';
 function About() {
   return (
     <>
-      <div className="min-h-screen pt-28 pb-16 px-6 bg-gradient-to-br from-[#edfdfa] via-[#fefefe] to-[#dff1f3] font-[Inter] text-gray-800">
+      <div className="min-h-screen pt-28 pb-16 px-4 sm:px-6 bg-gradient-to-br from-[#edfdfa] via-[#fefefe] to-[#dff1f3] font-[Inter] text-gray-800">
         <div className="max-w-6xl mx-auto text-center mb-12">
-          <h1 className="text-5xl font-extrabold text-teal-800 mb-4">About VyapaarSetu</h1>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-heading font-bold mb-6 text-teal-800 tracking-tight">
+            About VyapaarSetu
+          </h1>
           <p className="text-gray-600 text-md md:text-lg max-w-3xl mx-auto">
             A student-built initiative connecting Bharat’s local businesses with the digital world.
           </p>
         </div>
 
         {/* Vision Cards */}
-        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-10 mb-20">
+        <div className="max-w-6xl mx-auto grid sm:grid-cols-2 gap-6 md:gap-10 mb-20 px-2">
           {[
             {
               icon: '🌱',
@@ -48,8 +50,11 @@ function About() {
           ))}
         </div>
 
-        <div className="max-w-5xl mx-auto my-20">
-          <h2 className="text-3xl font-bold text-center text-teal-800 mb-12">Our Journey</h2>
+        {/* Timeline */}
+        <div className="max-w-5xl mx-auto my-20 px-2">
+          <h2 className="text-3xl sm:text-4xl font-heading font-bold mb-10 text-center text-teal-800">
+            Our Journey
+          </h2>
           <div className="border-l-4 border-teal-500 pl-6 space-y-8">
             {[
               {
@@ -82,10 +87,12 @@ function About() {
           </div>
         </div>
 
-        {/* Impact Stats */}
-        <div className="max-w-6xl mx-auto my-24 text-center px-4">
-          <h2 className="text-3xl font-bold text-teal-800 mb-12">Our Impact in Bharat</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        {/* Impact Section */}
+        <div className="max-w-6xl mx-auto my-24 text-center px-2">
+          <h2 className="text-3xl sm:text-4xl font-heading font-bold mb-10 text-teal-800">
+            Our Impact in Bharat
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6">
             {[
               { count: '150+', label: 'Verified Sellers', icon: '🧑‍🌾' },
               { count: '500+', label: 'Products Listed', icon: '📦' },

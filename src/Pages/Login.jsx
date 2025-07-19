@@ -17,7 +17,7 @@ function Login() {
       const userDoc = await getDoc(doc(db, 'users', user.uid));
       const userData = userDoc.data();
   
-      // ✅ Save to localStorage
+      //  Save to localStorage
       localStorage.setItem("userRole", userData?.role);
       localStorage.setItem("userId", user.uid);
   
