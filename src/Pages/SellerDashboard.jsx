@@ -12,6 +12,11 @@ function SellerDashboard() {
     image: '',
     description: '',
   });
+  const salesRecords = [
+    { buyer: 'Ravi Sharma', product: 'Handcrafted Pottery', date: '2025-07-10', amount: 499 },
+    { buyer: 'Pooja Verma', product: 'Jute Bag', date: '2025-07-08', amount: 349 },
+    { buyer: 'Aman Gupta', product: 'Organic Turmeric', date: '2025-07-06', amount: 229 },
+  ];
 
   useEffect(() => {
     const fetchSellerInfoAndProducts = async () => {
@@ -28,7 +33,6 @@ function SellerDashboard() {
           localStorage.setItem('sellerName', data.name);
         }
 
-        // Fetch seller's products
         const q = query(collection(db, 'products'), where('sellerId', '==', uid));
         const snapshot = await getDocs(q);
         const productList = snapshot.docs.map(doc => ({
