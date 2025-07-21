@@ -17,7 +17,7 @@ const producti = [
   },
   {
     id: 'hc2',
-    title: "Clothikoo Women's Crop Top (Black, Flower Print)",
+    title: "Clothikoo Women's Crop Top",
     price: 299,
     mrp: 499,
     rating: 4.2,
@@ -26,7 +26,7 @@ const producti = [
   },
   {
     id: 'hc3',
-    title: "Men's Leather Blue Comfy Sneakers Casual Shoes",
+    title: "Comfy Sneakers Casual Shoes",
     price: 1200,
     mrp: 1499,
     rating: 4.6,
@@ -35,7 +35,7 @@ const producti = [
   },
   {
     id: 'hc4',
-    title: "Adhyavi long silver necklace with enamel pendant",
+    title: "Adhyavi long silver necklace",
     price: 150,
     mrp: 300,
     rating: 4.0,
@@ -56,7 +56,6 @@ const Products = () => {
       }));
       setFirestoreProducts(fetched);
     };
-
     fetchProducts();
   }, []);
 
@@ -89,7 +88,7 @@ const Products = () => {
                     {product.title}
                   </div>
 
-                  <div className="text-xs text-gray-500 mt-1">White, Cable Included</div>
+                  <div className="text-xs text-gray-500 mt-1">Availabe at best price</div>
 
                   <div className="flex items-center text-xs font-semibold space-x-1 mt-2">
                     <span className="bg-green-600 text-white px-2 py-[2px] rounded flex items-center gap-1">
